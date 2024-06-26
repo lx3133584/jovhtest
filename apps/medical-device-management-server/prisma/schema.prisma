@@ -1,0 +1,47 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Supplier {
+  contactNumber String?
+  createdAt     DateTime @default(now())
+  devices       Device[]
+  id            String   @id @default(cuid())
+  name          String?
+  updatedAt     DateTime @updatedAt
+}
+
+model Device {
+  createdAt       DateTime          @default(now())
+  expiryDate      DateTime?
+  id              String            @id @default(cuid())
+  manufactureDate DateTime?
+  model           String?
+  name            String?
+  serialNumber    String?
+  status          EnumDeviceStatus?
+  supplier        Supplier?         @relation(fields: [supplierId], references: [id])
+  supplierId      String?
+  updatedAt       DateTime          @updatedAt
+}
+
+model User {
+  createdAt DateTime @default(now())
+  email     String?  @unique
+  firstName String?
+  id        String   @id @default(cuid())
+  lastName  String?
+  password  String
+  roles     Json
+  updatedAt DateTime @updatedAt
+  username  String   @unique
+}
+
+enum EnumDeviceStatus {
+  Option1
+}
